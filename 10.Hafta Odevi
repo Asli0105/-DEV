@@ -1,0 +1,166 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+
+struct Node {
+    int data;
+    struct Node* next;
+};
+
+typedef struct  Node Node;
+Node* head = NULL;
+
+void yazdir();
+void basaEkle(int veri);
+void arayaEkle(int veri , int sira);
+void sonaEkle(int veri);
+void dugumSil(int sira);
+
+int main() {
+    int secim ,veri ,sira;
+
+
+    while (1) {
+        printf("\n----Menu----\n");
+        printf("1. listeyi goruntule\n");
+        printf("2.basa eleman ekle\n");
+        printf("3.araya eleman ekle\n");
+        printf("4. sona eleman ekle\n");
+        printf("5.cikis yap.\n");
+        printf("secim yapiniz.\n");
+        scanf_s("%d" ,&secim);
+
+        switch (secim) {
+            case 1:
+                yazdir();
+            break;
+            case 2:
+                printf("eleman girin:\n" );
+            scanf_s("%d" , &veri);
+            basaEkle(veri);
+            break;
+            case 3 :
+                printf("Eleman girin:\n" );
+                scanf_s("%d" , &veri);
+                printf("kacinci indekse ekleme yapilsin:\n");
+                scanf_s("%d" , &sira);
+                arayaEkle(veri ,sira);
+            break;
+            case 4 :
+                printf("Eleman girin:");
+                sonaEkle(veri);
+            break;
+            case 5 :
+                printf("Hangi indeksteki eleman silinsin:\n");
+                scanf("%d" , &sira);
+            dugumSil(sira);
+            case 6:
+                printf("Cikis yapiliyor\n");
+            exit(0);
+            default:
+                printf("Gecersiz secim yapildi.\n");
+            break;
+
+
+        }
+    }
+    return 0;
+}
+
+void yazdir() {
+    Node* temp = head;
+
+    printf("liste :\n");
+    while (temp != NULL) {
+        printf("%d ->" , temp ->data);
+        temp =temp->next;
+
+    }
+    printf("NULL\n");
+}
+
+void basaEkle(int veri) {
+    Node* yeni = (Node*)malloc(sizeof(Node));
+
+    yeni->data = veri;
+    yeni->next =head;
+
+    head = yeni;
+
+
+}
+void arayaEkle(int veri ,int sira) {
+    Node* yeni = (Node*)malloc(sizeof(Node));
+
+    yeni->data = veri;
+    yeni->next = NULL;
+
+    if (sira == 0) {
+        basaEkle(veri);
+        return ;
+
+    }
+    Node* temp = head;
+    for (int i = 0; i < sira - 1 ; i++) {
+        if (temp == NULL) {
+            printf("girilen deger ,liste boyutundan buyuktur\n ");
+            free(yeni);
+        }
+        temp = temp->next;
+    }
+     yeni->next = temp->next;
+    temp->next = yeni;
+
+    printf("%d. indekse %d degeri eklendi .\n " , sira ,veri);
+}
+
+void sonaEkle(int veri) {
+    Node* yeni = (Node*)malloc(sizeof(Node));
+
+    yeni->data = veri;
+    yeni->next = NULL;
+
+    if (head == NULL) {
+        head = yeni;
+
+    }
+
+    Node* temp = head;
+    while (temp->next != NULL) {
+        temp = temp->next;
+    }
+    temp->next = yeni;
+    printf("%d degeri , listenin sonuna eklendi.\n",veri);
+}
+
+void dugumSil(int sira) {
+        if (head == NULL) {
+            printf("Liste boş, silinecek eleman yok.\n");
+            return;
+        }
+
+        Node* temp = head;
+
+        if (sira == 0) {
+            head = head->next;
+            free(temp);
+            printf("0. indeksteki eleman silindi.\n");
+            return;
+        }
+        Node* prev = NULL;
+        for (int i = 0; i < sira; i++) {
+            if (temp == NULL) {
+                printf("Girilen indeks listeden büyük!\n");
+                return;
+            }
+            prev = temp;
+            temp = temp->next;
+        }
+        if (temp != NULL) {
+            prev->next = temp->next;
+            free(temp);
+            printf("%d. indeksteki eleman silindi.\n", sira);
+        } else {
+            printf("Girilen indeks listeden büyük!\n");
+        }
+    }
